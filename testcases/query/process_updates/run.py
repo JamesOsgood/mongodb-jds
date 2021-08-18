@@ -10,10 +10,13 @@ class PySysTest(JDSBaseTest):
 	def execute(self):
 		db = self.get_db_connection()
 		non_matched_skus = set([])
-		ITEMS_TO_PROCESS = 10
+		ITEMS_TO_PROCESS = 1000
+		cnt = 0
+		BATCH_SIZE = 10
 		# for update in db.diffs.find({}).sort([('ts', pymongo.DESCENDING)]).limit(ITEMS_TO_PROCESS):
 		for update in db.brstck.find({}).limit(ITEMS_TO_PROCESS):
 			sku = update['sku']
+			# self.log.info(sku)
 			loc = update['loc']
 			fascia = update['fascia']
 			# Find product
@@ -22,12 +25,15 @@ class PySysTest(JDSBaseTest):
 				# Update quantity
 				prev_qty = int(product['skus'][0]['qty'])
 				new_qty = prev_qty + int(update['qtyATS'])
-				self.log.info(f'sku: {sku}, loc {loc}, product qty {prev_qty}, new qty {new_qty}')
+				# self.log.info(f'sku: {sku}, loc {loc}, product qty {prev_qty}, new qty {new_qty}')
 
 			else:
 				if not sku in non_matched_skus:
 					non_matched_skus.add(sku)
-					self.log.warn(f'No Matching product for sku {sku}')
+					# self.log.warn(f'No Matching product for sku {sku}')
+			cnt += 1
+			if cnt % BATCH_SIZE == 0:
+				self.log.info(f'Processed {cnt} items')
 
 			
 	def get_sku_product_details(self, db, sku):

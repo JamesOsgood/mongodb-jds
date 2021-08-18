@@ -14,9 +14,9 @@ class PySysTest(JDSBaseTest):
 		JDSBaseTest.__init__(self, descriptor, outsubdir, runner)
 
 		self.importers = {}
-		self.importers['Diff_Store_Stock_'] = self.import_diff
+		# self.importers['Diff_Store_Stock_'] = self.import_diff
 		# self.importers['JD_XML-BRSTCK_'] = self.import_brstck
-		# self.importers['Shogun_pimimport_stock_'] = self.import_shogun
+		self.importers['Shogun_pimimport_stock_'] = self.import_shogun
 		self.BATCH_SIZE = 1000
 		self.docs = []
 		self.doc_count = 0
@@ -29,12 +29,13 @@ class PySysTest(JDSBaseTest):
 		
 		for filename in os.listdir(data_dir):
 			self.log.info(filename)
-			docs = []
-			for stub in self.importers.keys():
-				if filename.startswith(stub):
-					ts = self.extract_date(filename, stub)
-					with open(os.path.join(data_dir, filename)) as file:					
-						self.importers[stub](db, ts, file)
+			if filename.endswith("xml"):
+				docs = []
+				for stub in self.importers.keys():
+					if filename.startswith(stub):
+						ts = self.extract_date(filename, stub)
+						with open(os.path.join(data_dir, filename)) as file:					
+							self.importers[stub](db, ts, file)
 
 	def done_file(self, collection):
 		if len(self.docs) > 0:
@@ -80,16 +81,23 @@ class PySysTest(JDSBaseTest):
 
 	def import_shogun(self, db, ts, file):
 		products = xmltodict.parse(file.read())
+		converted_sku = 0
 		for product in products['products']['product']:
 			product['ts'] = ts
+			skus = product['skus']['sku']
+			if not isinstance(skus, list):
+				converted_sku += 1
+				self.log.info(f'Converting to list: {converted_sku}')
+				product['skus']['sku'] = [skus]
+
 			self.add_doc(db.raw.products, product)
 
 		self.done_file(db.raw.products)
 
 	def clear_all(self, db):
-		db.raw.diff.drop()
+		# db.raw.diff.drop()
 		# db.raw.brstck.drop()
-		# db.raw.products.drop()
+		db.raw.products.drop()
 
 	def validate(self):
 		pass
