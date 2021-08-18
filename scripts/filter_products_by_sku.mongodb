@@ -1,0 +1,19 @@
+// Select the database to use.
+use('stock');
+
+var sku = '000429568'
+
+pipeline = [{$match: {
+      'skus.sku.id' : sku
+    }}, {$project: {
+      id : 1,
+      skus: {
+          $filter: {
+            input: "$skus.sku",
+            as: "item",
+            cond: { $eq: [ "$$item.id", sku ] }
+          }
+      }
+    }}]
+
+db.products.aggregate(pipeline).toArray()
