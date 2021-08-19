@@ -14,8 +14,8 @@ class PySysTest(JDSBaseTest):
 		JDSBaseTest.__init__(self, descriptor, outsubdir, runner)
 
 		self.importers = {}
-		# self.importers['Diff_Store_Stock_'] = self.import_diff
-		# self.importers['JD_XML-BRSTCK_'] = self.import_brstck
+		self.importers['Diff_Store_Stock_'] = self.import_diff
+		self.importers['JD_XML-BRSTCK_'] = self.import_brstck
 		self.importers['Shogun_pimimport_stock_'] = self.import_shogun
 		self.BATCH_SIZE = 1000
 		self.docs = []
@@ -99,8 +99,8 @@ class PySysTest(JDSBaseTest):
 		self.done_file(db.raw.products)
 
 	def clear_all(self, db):
-		# db.raw.diff.drop()
-		# db.raw.brstck.drop()
+		db.raw.diff.drop()
+		db.raw.brstck.drop()
 		db.raw.products.drop()
 
 	def validate(self):
