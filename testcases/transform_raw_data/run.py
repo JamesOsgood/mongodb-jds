@@ -34,23 +34,23 @@ class PySysTest(JDSBaseTest):
 		# db.raw.brstck.aggregate(agg_brstck)
 
 
-		agg_diffs = [
-			{
-				'$project': {
-					'loc': 1, 
-					'fascia': 1, 
-					'sku': 1, 
-					'qtyATS': {
-						'$toInt': '$qtyATS'
-					}, 
-					'ts': 1
-				}
-			}, {
-				'$out': 'diffs'
-			}
-		]
-		self.log.info('raw.diffs')
-		db.raw.diffs.aggregate(agg_diffs)
+		# agg_diffs = [
+		# 	{
+		# 		'$project': {
+		# 			'loc': 1, 
+		# 			'fascia': 1, 
+		# 			'sku': 1, 
+		# 			'qtyATS': {
+		# 				'$toInt': '$qtyATS'
+		# 			}, 
+		# 			'ts': 1
+		# 		}
+		# 	}, {
+		# 		'$out': 'diffs'
+		# 	}
+		# ]
+		# self.log.info('raw.diffs')
+		# db.raw.diffs.aggregate(agg_diffs)
 
 		agg_products = [
 			{

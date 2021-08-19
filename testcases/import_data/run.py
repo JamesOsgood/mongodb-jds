@@ -82,15 +82,19 @@ class PySysTest(JDSBaseTest):
 	def import_shogun(self, db, ts, file):
 		products = xmltodict.parse(file.read())
 		converted_sku = 0
+		products_seen = set()
 		for product in products['products']['product']:
-			product['ts'] = ts
-			skus = product['skus']['sku']
-			if not isinstance(skus, list):
-				converted_sku += 1
-				self.log.info(f'Converting to list: {converted_sku}')
-				product['skus']['sku'] = [skus]
+			id = product['id']
+			if not id in products_seen:
+				product['ts'] = ts
+				skus = product['skus']['sku']
+				if not isinstance(skus, list):
+					converted_sku += 1
+					self.log.info(f'Converting to list: {converted_sku}')
+					product['skus']['sku'] = [skus]
 
-			self.add_doc(db.raw.products, product)
+				self.add_doc(db.raw.products, product)
+				products_seen.add(id)
 
 		self.done_file(db.raw.products)
 
