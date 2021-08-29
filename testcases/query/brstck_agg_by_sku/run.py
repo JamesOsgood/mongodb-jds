@@ -11,9 +11,6 @@ class PySysTest(JDSBaseTest):
 		db = self.get_db_connection()
 		# limit = 10000
 		pipeline = [
-			# {
-			# 	'$limit': 10
-			# }, 
 			{
 				'$group': {
 					'_id': {
