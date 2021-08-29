@@ -59,5 +59,21 @@ class PySysTest(JDSBaseTest):
 		self.log.info('raw.products')
 		db.raw.products.aggregate(agg_products)
 
+		agg_prices = [
+			{
+				'$out': 'prices'
+			}
+		]
+		self.log.info('raw.prices')
+		db.raw.prices.aggregate(agg_prices)
+
+		agg_stock = [
+			{
+				'$out': 'stock'
+			}
+		]
+		self.log.info('raw.stock')
+		db.raw.stock.aggregate(agg_stock)
+
 	def validate(self):
 		pass

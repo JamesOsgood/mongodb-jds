@@ -15,9 +15,9 @@ class PySysTest(JDSBaseTest):
 
 		self.importers = {}
 		self.importers['Diff_Store_Stock_'] = self.import_diff
-		self.importers['JD_XML-BRSTCK_'] = self.import_brstck
-		self.importers['Shogun_pimimport_stock_'] = self.import_shogun_stock
-		self.importers['Shogun_pimimport_price_'] = self.import_shogun_price
+		# self.importers['JD_XML-BRSTCK_'] = self.import_brstck
+		# self.importers['Shogun_pimimport_stock_'] = self.import_shogun_stock
+		# self.importers['Shogun_pimimport_price_'] = self.import_shogun_price
 		self.importers['Shogun_pimimport_product_'] = self.import_shogun_product
 		self.BATCH_SIZE = 1000
 		self.docs = []
@@ -26,7 +26,7 @@ class PySysTest(JDSBaseTest):
 	def execute(self):
 		db = self.get_db_connection()
 		self.clear_all(db)
-		sub_dir = 'latest_sample'
+		sub_dir = 'latest'
 		data_dir = os.path.join(os.path.expanduser(self.project.DATA_PATH), sub_dir)
 		
 		for filename in os.listdir(data_dir):
@@ -122,9 +122,11 @@ class PySysTest(JDSBaseTest):
 	def import_shogun_product(self, db, ts, file):
 		products = xmltodict.parse(file.read())
 		converted_sku = 0
+		converted_upc = 0
 		products_seen = set()
 		for product in products['products']['product']:
 			id = product['id']
+			self.log.info(id)
 			if not id in products_seen:
 				product['ts'] = ts
 				skus = product['skus']['sku']
@@ -132,6 +134,14 @@ class PySysTest(JDSBaseTest):
 					converted_sku += 1
 					self.log.info(f'Converting to list: {converted_sku}')
 					product['skus']['sku'] = [skus]
+
+				for sku in skus:
+					upcs = sku['upcs']['upc']
+					self.log.info(upcs)
+					if not isinstance(upcs, list):
+						converted_upc += 1
+						self.log.info(f'Converting upc to list: {converted_upc}')
+						sku['upcs']['upc'] = [upcs]
 
 				self.add_doc(db.raw.products, product)
 				products_seen.add(id)
@@ -141,6 +151,7 @@ class PySysTest(JDSBaseTest):
 	def clear_all(self, db):
 		db.raw.diff.drop()
 		db.raw.brstck.drop()
+		db.raw.products.drop()
 		db.raw.stock.drop()
 		db.raw.prices.drop()
 
