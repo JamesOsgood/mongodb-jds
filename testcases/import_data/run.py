@@ -131,11 +131,12 @@ class PySysTest(JDSBaseTest):
 				product['ts'] = ts
 				skus = product['skus']['sku']
 				if not isinstance(skus, list):
+					
 					converted_sku += 1
 					self.log.info(f'Converting to list: {converted_sku}')
 					product['skus']['sku'] = [skus]
 
-				for sku in skus:
+				for sku in product['skus']['sku']:
 					upcs = sku['upcs']['upc']
 					self.log.info(upcs)
 					if not isinstance(upcs, list):
