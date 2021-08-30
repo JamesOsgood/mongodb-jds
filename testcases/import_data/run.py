@@ -15,9 +15,9 @@ class PySysTest(JDSBaseTest):
 
 		self.importers = {}
 		self.importers['Diff_Store_Stock_'] = self.import_diff
-		# self.importers['JD_XML-BRSTCK_'] = self.import_brstck
-		# self.importers['Shogun_pimimport_stock_'] = self.import_shogun_stock
-		# self.importers['Shogun_pimimport_price_'] = self.import_shogun_price
+		self.importers['JD_XML-BRSTCK_'] = self.import_brstck
+		self.importers['Shogun_pimimport_stock_'] = self.import_shogun_stock
+		self.importers['Shogun_pimimport_price_'] = self.import_shogun_price
 		self.importers['Shogun_pimimport_product_'] = self.import_shogun_product
 		self.BATCH_SIZE = 1000
 		self.docs = []
@@ -140,7 +140,7 @@ class PySysTest(JDSBaseTest):
 					upcs = sku['upcs']
 					if upcs:
 						upc = upcs['upc']
-						self.log.info(upc)
+						# self.log.info(upc)
 						if not isinstance(upc, list):
 							converted_upc += 1
 							self.log.info(f'Converting upc to list: {converted_upc}')
