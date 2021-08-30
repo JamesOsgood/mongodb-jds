@@ -139,7 +139,7 @@ class PySysTest(JDSBaseTest):
 				for sku in product['skus']['sku']:
 					upcs = sku['upcs']
 					if upcs:
-						upc = ['upc']
+						upc = upcs['upc']
 						self.log.info(upc)
 						if not isinstance(upc, list):
 							converted_upc += 1
