@@ -22,16 +22,71 @@ class PySysTest(JDSBaseTest):
 			current_ids.append(doc['_id'])
 			# self.log.info(doc['_id'])
 			if len(current_ids) == BATCH_SIZE:
-				pipeline = self.get_pipeline(current_ids, batch_index)
+				pipeline = self.get_pipeline_skuinfo(current_ids, batch_index)
 				ret = list(db.brstck.aggregate(pipeline, allowDiskUse=True))
 				cnt += len(current_ids)
-				db.batch_progress.update_one({}, { '$inc' : { 'batches_inserted' : 1, 'docs_inserted' : len(current_ids)}})
+				db.batch_progress.update_one({}, { '$inc' : { 'batches_inserted' : 1, 'docs_inserted' : len(current_ids), 'bcodes_inserted' : len(ret)}})
 				db.batch_done.insert_one({'batch_index' : batch_index})
 				batch_index += 1
 				current_ids = []
 				self.log.info(f'Done {cnt}')
+
+		if len(current_ids) >0:
+			pipeline = self.get_pipeline_skuinfo(current_ids, batch_index)
+			ret = list(db.brstck.aggregate(pipeline, allowDiskUse=True))
+			cnt += len(current_ids)
+			db.batch_progress.update_one({}, { '$inc' : { 'batches_inserted' : 1, 'docs_inserted' : len(current_ids), 'bcodes_inserted' : len(ret)}})
+			db.batch_done.insert_one({'batch_index' : batch_index})
+			batch_index += 1
+			current_ids = []
+			self.log.info(f'Done {cnt}')
 	
-	def get_pipeline(self, current_ids, batch_index):
+	def get_pipeline_skuinfo(self, current_ids, batch_index):
+		pipeline = [
+			{
+				'$match': {
+					'_id' : {
+						'$in' : current_ids
+					}
+				}
+		 	}, {
+				'$lookup': {
+					'from': 'skuinfo', 
+					'localField': 'sku', 
+					'foreignField': 'RemoteSystemId', 
+					'as': 'product'
+				}
+			}, {
+				'$unwind': {
+					'path': '$product'
+				}
+			}, {
+				'$unwind': {
+					'path': '$product'
+				}
+			}, {
+				'$unwind': {
+					'path': '$product'
+				}
+			}, {
+				'$project': {
+					'loc': 1, 
+					'qty': {
+						'$toString': '$qtyATS'
+					}, 
+					'sku': 1, 
+					'bcode': '$product.Upc', 
+					'_id': 0
+				}
+			}, {
+				'$merge': {
+					'into': 'brstck_bcodes'
+				}
+			}
+		]		
+		return pipeline
+
+	def get_pipeline_product(self, current_ids, batch_index):
 		pipeline = [
 			{
 				'$match': {
