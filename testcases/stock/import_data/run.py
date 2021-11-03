@@ -27,7 +27,7 @@ class PySysTest(JDSBaseTest):
 		db = self.get_db_connection()
 		self.clear_all(db)
 		sub_dir = 'latest'
-		data_dir = os.path.join(os.path.expanduser(self.project.DATA_PATH), sub_dir)
+		data_dir = os.path.join(os.path.expanduser(self.project.DATA_PATH), 'stock', sub_dir)
 		
 		for filename in os.listdir(data_dir):
 			self.log.info(filename)
