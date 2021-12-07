@@ -1,12 +1,10 @@
 import os
 from datetime import datetime
 import xmltodict
+from pysys.constants import FOREGROUND
 
-import json
 
 from JDSBaseTest import JDSBaseTest
-import pymongo
-import string
 from datetime import datetime
 
 class PySysTest(JDSBaseTest):

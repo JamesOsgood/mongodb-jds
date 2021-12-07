@@ -79,6 +79,10 @@ class PySysTest(JDSBaseTest):
 					'_id': 0
 				}
 			}, {
+				'$addFields' : {
+					'batch_index' : batch_index
+				}
+			},{
 				'$merge': {
 					'into': 'brstck_bcodes'
 				}
