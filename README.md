@@ -84,7 +84,7 @@ Run the test in this order
 1. `pysys run 1_import_data` - This imports all the *_XML-BRSTCK*.xml files
 1. `pysys run 2_import_skuinfo` - This imports skuinfo via mongoimport
 1. `pysys run 3_transform_raw_data` - This runs a few transformations to tidy up the data
-1. `pysys run 4_brstck_bcodes` - This joins btsrck and skuinfo to create the output barcode information. This populuate the `batch_done` which is being picked up by the trigger as defined above.
+1. `pysys run 4_brstck_bcodes` - This joins btsrck and skuinfo to create the output barcode information. This populate the `batch_done` which is being picked up by the trigger as defined above.
 
 All the code for the realm app is [here](./realm-app)
 
