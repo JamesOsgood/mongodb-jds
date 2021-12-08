@@ -10,15 +10,19 @@ class PySysTest(JDSBaseTest):
 
 	def execute(self):
 		db = self.get_db_connection()
+		self.log.info("Creating index on skuinfo")
+		db.skuinfo.create_index('RemoteSystemId')
+		self.log.info("Done creating index on skuinfo")
 		db.brstck_bcodes.drop()
+		db.brstck_bcodes.create_index('batch_id')
 		db.batch_done.delete_many({})
 		db.batch_progress.delete_many({})
 		db.batch_progress.insert_one({'batches_inserted' : 0, 'batches_sent' : 0, 'docs_inserted' : 0, 'docs_sent' : 0})
 		current_ids = []
-		BATCH_SIZE = 10000
+		BATCH_SIZE = 5
 		cnt = 0
 		batch_index = 0
-		for doc in db.brstck.find({}, {'_id : 1'}, batch_size = BATCH_SIZE):
+		for doc in db.brstck.find({}, {'_id : 1'}, batch_size = BATCH_SIZE).limit(10):
 			current_ids.append(doc['_id'])
 			# self.log.info(doc['_id'])
 			if len(current_ids) == BATCH_SIZE:

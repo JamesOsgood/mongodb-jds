@@ -1,0 +1,26 @@
+{
+    "id": "61aff4b64d795c0be7193a30",
+    "name": "trigger_bcodes",
+    "type": "DATABASE",
+    "config": {
+        "operation_types": [
+            "INSERT"
+        ],
+        "database": "stock",
+        "collection": "batch_done",
+        "service_name": "stock-service-atlas",
+        "match": {},
+        "project": {},
+        "full_document": true,
+        "full_document_before_change": false,
+        "unordered": true
+    },
+    "disabled": false,
+    "event_processors": {
+        "FUNCTION": {
+            "config": {
+                "function_name": "trigger_batch_done"
+            }
+        }
+    }
+}

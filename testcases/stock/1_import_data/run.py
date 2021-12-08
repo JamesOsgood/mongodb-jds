@@ -12,11 +12,11 @@ class PySysTest(JDSBaseTest):
 		JDSBaseTest.__init__(self, descriptor, outsubdir, runner)
 
 		self.importers = {}
-		self.importers['Diff_Store_Stock_'] = self.import_diff
+		# self.importers['Diff_Store_Stock_'] = self.import_diff
 		self.importers['JD_XML-BRSTCK_'] = self.import_brstck
-		self.importers['Shogun_pimimport_stock_'] = self.import_shogun_stock
-		self.importers['Shogun_pimimport_price_'] = self.import_shogun_price
-		self.importers['Shogun_pimimport_product_'] = self.import_shogun_product
+		# self.importers['Shogun_pimimport_stock_'] = self.import_shogun_stock
+		# self.importers['Shogun_pimimport_price_'] = self.import_shogun_price
+		# self.importers['Shogun_pimimport_product_'] = self.import_shogun_product
 		self.BATCH_SIZE = 1000
 		self.docs = []
 		self.doc_count = 0

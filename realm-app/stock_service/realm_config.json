@@ -1,0 +1,8 @@
+{
+    "app_id": "stock_service-iyxzc",
+    "config_version": 20210101,
+    "name": "stock_service",
+    "location": "IE",
+    "deployment_model": "LOCAL",
+    "environment": "development"
+}
