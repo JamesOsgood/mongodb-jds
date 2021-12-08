@@ -19,7 +19,7 @@ class PySysTest(JDSBaseTest):
 		db.batch_progress.delete_many({})
 		db.batch_progress.insert_one({'batches_inserted' : 0, 'batches_sent' : 0, 'docs_inserted' : 0, 'docs_sent' : 0})
 		current_ids = []
-		BATCH_SIZE = 10000
+		BATCH_SIZE = 1000
 		cnt = 0
 		batch_index = 0
 		for doc in db.brstck.find({}, {'_id : 1'}, batch_size = BATCH_SIZE):
