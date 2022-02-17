@@ -1,0 +1,10 @@
+{
+    "name": "mongodb-atlas-fts",
+    "type": "mongodb-atlas",
+    "config": {
+        "clusterName":"rpi-sensor-data",
+        "readPreference": "primary",
+        "wireProtocolEnabled": false
+    },
+    "version": 1
+}

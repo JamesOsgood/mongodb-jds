@@ -1,0 +1,7 @@
+{
+    "config_version": 20210101,
+    "app_id": "product-search-escnm",
+    "name": "Product-Search",
+    "location": "IE",
+    "deployment_model": "LOCAL"
+}

@@ -1,0 +1,12 @@
+{
+    "config_version": 20200603,
+    "name": "Product-Search",
+    "location": "IE",
+    "deployment_model": "LOCAL",
+    "security": {},
+    "hosting": {
+        "enabled": true,
+        "default_error_path": "",
+        "default_error_code": "404"
+    }
+}
