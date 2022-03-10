@@ -1,0 +1,63 @@
+{
+    "mappings": {
+      "dynamic": false,
+      "fields": {
+        "BRAND_NAME": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "stringFacet"
+          }
+        ],
+        "CARE": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "stringFacet"
+          }
+        ],
+        "CATEGORY_DESC": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "stringFacet"
+          }
+        ],
+        "FABRIC": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "stringFacet"
+          }
+        ],
+        "MAIN_COLOUR": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "stringFacet"
+          }
+        ],
+        "SECONDARY_COLOUR": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "stringFacet"
+          }
+        ],
+        "TITLE": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "stringFacet"
+          }
+        ]
+      }
+    }
+  }

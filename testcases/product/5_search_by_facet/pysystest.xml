@@ -2,7 +2,7 @@
 <pysystest type="auto" state="runnable">
     
   <description> 
-    <title>Extract fields for text search</title>    
+    <title>Query - Search by Facet</title>    
     <purpose><![CDATA[
 ]]>
     </purpose>

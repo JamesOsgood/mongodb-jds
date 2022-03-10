@@ -1,0 +1,78 @@
+{
+  "mappings": {
+    "dynamic": false,
+    "fields": {
+      "brandDetail": {
+        "fields": {
+          "BRAND_NAME": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "stringFacet"
+            }
+          ]
+        },
+        "type": "document"
+      },
+      "categoryDetail": {
+        "fields": {
+          "CATEGORY_DESC": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "stringFacet"
+            }
+          ]
+        },
+        "type": "document"
+      },
+      "product_infoDetail": {
+        "fields": {
+          "CARE": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "stringFacet"
+            }
+          ],
+          "FABRIC": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "stringFacet"
+            }
+          ],
+          "MAIN_COLOUR": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "stringFacet"
+            }
+          ],
+          "SECONDARY_COLOUR": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "stringFacet"
+            }
+          ],
+          "TITLE": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "stringFacet"
+            }
+          ]
+        },
+        "type": "document"
+      }
+    }
+  }
+}
