@@ -53,14 +53,18 @@ class PySysTest(JDSBaseTest):
 					}
 				}
 			},
-			{ '$count' : 'cnt' }
+			# { '$count' : 'cnt' }
+			{ '$limit' : 25 }
 		]
 
 
 		res = list(input_coll.aggregate(pipeline_data))
 		cnt = 0
 		if len(res) > 0:
-			cnt = res[0]['cnt']
+			if 'cnt' in res[0]:
+				cnt = res[0]['cnt']
+			else:
+				cnt = len(res)
 		self.log.info(f"Pipeline returned {cnt} results")
 		self.log.info(f"\t\tMDB:{pipeline_data}")
 
