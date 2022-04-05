@@ -1,0 +1,23 @@
+{
+  "mappings": {
+    "dynamic": false,
+    "fields": {
+      "product_infoDetail": {
+        "fields": {
+          "TITLE": {
+            "foldDiacritics": false,
+            "maxGrams": 7,
+            "minGrams": 3,
+            "type": "autocomplete"
+          }
+        },
+        "type": "document"
+      }
+    }
+  },
+  "storedSource": {
+    "include": [
+      "product_infoDetail.TITLE"
+    ]
+  }
+}

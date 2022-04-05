@@ -1,0 +1,25 @@
+{
+    "$search": {
+      "index": "facetIndex",
+      "compound": {
+        "must": [
+          {
+            "text": {
+              "query": "Brown",
+              "path": "product_infoDetail.MAIN_COLOUR"
+            }
+          },
+          {
+            "text": {
+              "query": "JNR REPLICA KITS (Ca)",
+              "path": "categoryDetail.CATEGORY_DESC"
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "$limit": 25
+  }
+]

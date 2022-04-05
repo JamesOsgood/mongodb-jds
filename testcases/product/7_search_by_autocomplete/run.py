@@ -12,108 +12,99 @@ class PySysTest(JDSBaseTest):
 
 	def execute(self):
 		db = self.get_db_connection('jds_product')
-		input_coll = db.product_search
+		input_coll = db.product
 
 		all_facet_values = self.get_facet_values(self.get_all_facet_counts(input_coll))
-		ITERATIONS = 1
-		FACETS_TO_PICK = 2
-		for i in range(ITERATIONS):
-			facets = random.sample(all_facet_values.keys(),FACETS_TO_PICK)
-			facet_values = {}
-			for facet in facets:
-				facet_values[facet] = all_facet_values[facet]
+		titles = all_facet_values['product_infoDetail.TITLE']
 
-			docs = self.get_data_and_counts(input_coll, facet_values)
+		input_value = random.choice(titles)
+		if len(input_value) > 3:
+			input_value = input_value[0:5]
 
-	def get_data_and_counts(self, input_coll, facet_values):
-		must = []
-		facets = {}
-		for field in facet_values:
-			values = facet_values[field]
-			
-			# Must
-			text_doc = {}
-			text_doc['text'] = {}
-			text_doc['text']['query'] = random.choice(values)
-			text_doc['text']['path'] = field
-			must.append(text_doc)
+		self.get_data(input_coll, input_value)
 
-			# facets
-			facet_doc = {}
-			facet_doc['type'] = 'string'
-			facet_doc['path'] = field
-			facets[field] = facet_doc
+
+	def get_data(self, input_coll, input_value):
 
 		pipeline_data = [
 			{
 				'$search': {
-					'index': 'default', 
-					'compound': {
-						'must': must
+					'index': 'autocompleteIndex', 
+					'autocomplete': {
+						'query': input_value, 
+						'path': 'product_infoDetail.TITLE'
 					}
 				}
-			},
-			{ '$count' : 'cnt' }
+			}, {
+				'$project': {
+					'TITLE': '$product_infoDetail.TITLE', 
+					'SKU_SIZE': 1, 
+					'GENDER_ID': 1, 
+					'COLOUR_ID': 1, 
+					'_id': 0, 
+					'PRODUCT_INFO_ID': 1, 
+					'score': {
+						'$meta': 'searchScore'
+					}
+				}
+			}, {
+				'$limit': 25
+			}
 		]
 
 
 		res = list(input_coll.aggregate(pipeline_data))
 		cnt = 0
 		if len(res) > 0:
-			cnt = res[0]['cnt']
-		self.log.info(f"Pipeline {pipeline_data} returned {cnt} results")
-
-		filter = { 'compound': { 'must': must } }
-		facet_counts = self.get_facet_counts(input_coll, filter)
-
-		for field in facet_counts:
-			self.log.info(f"OUTPUT: {field} ({len(facet_counts[field]['buckets'])})")
+			cnt = len(res)
+		self.log.info(f"Pipeline returned {cnt} results")
+		self.log.info(f"\t\tMDB:{pipeline_data}")
 
 	def get_all_facet_counts(self, input_coll):
 		exists = {}
-		exists['exists'] = {'path': 'BRAND_NAME'}
+		exists['exists'] = {'path': 'brandDetail.BRAND_NAME'}
 		return self.get_facet_counts(input_coll, exists)
 
 	def get_facet_counts(self, input_coll, operator, limit = 100):
 		pipeline = [{
 			'$searchMeta': {
-				'index': 'default', 
+				'index': 'facetIndex', 
 				'facet': {
 					'operator': operator,
 					'facets': {
-						'BRAND_NAME': {
+						'brandDetail.BRAND_NAME': {
 							'type': 'string', 
-							'path': 'BRAND_NAME',
+							'path': 'brandDetail.BRAND_NAME',
 							'numBuckets' : limit
 						}, 
-						'TITLE': {
+						'product_infoDetail.TITLE': {
 							'type': 'string', 
-							'path': 'TITLE',
+							'path': 'product_infoDetail.TITLE',
 							'numBuckets' : limit
 						}, 
-						'MAIN_COLOUR': {
+						'product_infoDetail.MAIN_COLOUR': {
 							'type': 'string', 
-							'path': 'MAIN_COLOUR',
+							'path': 'product_infoDetail.MAIN_COLOUR',
 							'numBuckets' : limit
 						}, 
-						'SECONDARY_COLOUR': {
+						'product_infoDetail.SECONDARY_COLOUR': {
 							'type': 'string', 
-							'path': 'SECONDARY_COLOUR',
+							'path': 'product_infoDetail.SECONDARY_COLOUR',
 							'numBuckets' : limit
 						}, 
-						'FABRIC': {
+						'product_infoDetail.FABRIC': {
 							'type': 'string', 
-							'path': 'FABRIC',
+							'path': 'product_infoDetail.FABRIC',
 							'numBuckets' : limit
 						}, 
-						'CARE': {
+						'product_infoDetail.CARE': {
 							'type': 'string', 
-							'path': 'CARE',
+							'path': 'product_infoDetail.CARE',
 							'numBuckets' : limit
 						}, 
-						'CATEGORY_DESC': {
+						'categoryDetail.CATEGORY_DESC': {
 							'type': 'string', 
-							'path': 'CATEGORY_DESC',
+							'path': 'categoryDetail.CATEGORY_DESC',
 							'numBuckets' : limit
 						}
 					}
@@ -121,6 +112,7 @@ class PySysTest(JDSBaseTest):
 			}
 		}]
 
+		self.log.info(pipeline)
 		ret = list(input_coll.aggregate(pipeline))
 		if len(ret) > 0:
 			ret = ret[0]

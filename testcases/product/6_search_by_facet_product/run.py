@@ -71,8 +71,10 @@ class PySysTest(JDSBaseTest):
 		filter = { 'compound': { 'must': must } }
 		facet_counts = self.get_facet_counts(input_coll, filter)
 
+		output = {}
 		for field in facet_counts:
-			self.log.info(f"OUTPUT: {field} ({len(facet_counts[field]['buckets'])})")
+			output[field] = len(facet_counts[field]['buckets'])
+		self.log.info(output)
 
 	def get_all_facet_counts(self, input_coll):
 		exists = {}
@@ -126,7 +128,7 @@ class PySysTest(JDSBaseTest):
 			}
 		}]
 
-		self.log.info(f"\t\tMDB: {pipeline}")
+		self.log.info(pipeline)
 		ret = list(input_coll.aggregate(pipeline))
 		if len(ret) > 0:
 			ret = ret[0]

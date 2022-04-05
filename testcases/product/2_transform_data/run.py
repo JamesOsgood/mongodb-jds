@@ -22,7 +22,7 @@ class PySysTest(JDSBaseTest):
 		output_coll = output_db[output_coll_name]
 		# output_coll.drop()
 
-		BATCH_SIZE = 1000
+		BATCH_SIZE = 1
 		cnt = 0
 		current_ids = []
 		for doc in input_coll.find({}, {'SKU' : 1}, batch_size = BATCH_SIZE):
@@ -34,23 +34,24 @@ class PySysTest(JDSBaseTest):
 				cnt += len(current_ids)
 				current_ids = []
 				self.log.info(f'Done {cnt}')
+				break
 		
-		self.create_indexes(output_coll)
+		# self.create_indexes(output_coll)
 
 
 	def create_productx(self, input_coll, current_ids):
 
 		joins = []
 		# Simple
-		# joins.append( ("gender", ["GENDER_ID", "GENDER_ID"] ))
-		# joins.append( ("category", ["CATEGORY_ID", "CATEGORY_ID"] ))
-		# joins.append( ("department", ["DEPARTMENT_ID", "DEPARTMENT_ID"] ))
-		# joins.append( ("brand", ["BRAND_ID", "BRAND_ID"] ))
-		# joins.append( ("colour", ["COLOUR", "COLOUR_ID"] ))
+		joins.append( ("gender", ["GENDER_ID", "GENDER_ID"] ))
+		joins.append( ("category", ["CATEGORY_ID", "CATEGORY_ID"] ))
+		joins.append( ("department", ["DEPARTMENT_ID", "DEPARTMENT_ID"] ))
+		joins.append( ("brand", ["BRAND_ID", "BRAND_ID"] ))
+		joins.append( ("colour", ["COLOUR", "COLOUR_ID"] ))
 		joins.append( ("product_info", ["PRODUCT_INFO_ID", "PRODUCT_INFO_ID"] ))
 		# # # Multi
-		# joins.append( ("grp", ["GROUP_ID", "GROUP_ID", "DEPARTMENT_ID", "DEPARTMENT_ID"] ))
-		# joins.append( ("product_facia_info", ["PRODUCT_INFO_ID", "PRODUCT_INFO_ID", "FACIA_ID", "_JD"] ))
+		joins.append( ("grp", ["GROUP_ID", "GROUP_ID", "DEPARTMENT_ID", "DEPARTMENT_ID"] ))
+		joins.append( ("product_facia_info", ["PRODUCT_INFO_ID", "PRODUCT_INFO_ID", "FACIA_ID", "_JD"] ))
 
 		pipeline = []
 		pipeline.append( { '$match': {
@@ -82,10 +83,10 @@ class PySysTest(JDSBaseTest):
 					'whenMatched': 'merge'
 				}
 			}
-		# pipeline.append(merge)
-		# self.log.info(pipeline)
-		cnt = len(list(input_coll.aggregate(pipeline)))
-		self.log.info(cnt)
+		pipeline.append(merge)
+		self.log.info(pipeline)
+		# cnt = len(list(input_coll.aggregate(pipeline)))
+		# self.log.info(cnt)
 
 	def create_indexes(self, output_coll):
 		output_coll.create_index('BARCODE_PRIMARY')
@@ -127,7 +128,8 @@ class PySysTest(JDSBaseTest):
 			}
 		unwind = {
 				'$unwind': {
-					'path': f'${rhs}Detail'
+					'path': f'${rhs}Detail',
+					'preserveNullAndEmptyArrays': True
 				}
 			}
 		pipeline.append(lookup)
@@ -170,7 +172,8 @@ class PySysTest(JDSBaseTest):
 				}
 			}, {
 				'$unwind': {
-					'path': f'${rhs}Detail'
+					'path': f'${rhs}Detail',
+					'preserveNullAndEmptyArrays': True
 				}
 			}, {
 				'$merge': {
@@ -192,7 +195,8 @@ class PySysTest(JDSBaseTest):
 				}
 		unwind = {
 				'$unwind': {
-					'path': f'${rhs}Detail'
+					'path': f'${rhs}Detail',
+					'preserveNullAndEmptyArrays': True
 				}
 			}
 
@@ -217,7 +221,8 @@ class PySysTest(JDSBaseTest):
 				}
 			}, {
 				'$unwind': {
-					'path': f'${rhs}Detail'
+					'path': f'${rhs}Detail',
+					'preserveNullAndEmptyArrays': True
 				}
 			}, {
 				'$merge': {

@@ -1,0 +1,27 @@
+[
+  {
+    "$search": {
+      "index": "autocompleteIndex",
+      "autocomplete": {
+        "query": "Tech ",
+        "path": "product_infoDetail.TITLE"
+      }
+    }
+  },
+  {
+    "$project": {
+      "TITLE": "$product_infoDetail.TITLE",
+      "SKU_SIZE": 1,
+      "GENDER_ID": 1,
+      "COLOUR_ID": 1,
+      "_id": 0,
+      "PRODUCT_INFO_ID": 1,
+      "score": {
+        "$meta": "searchScore"
+      }
+    }
+  },
+  {
+    "$limit": 25
+  }
+]

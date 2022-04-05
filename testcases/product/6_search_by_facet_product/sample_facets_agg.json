@@ -1,0 +1,64 @@
+[
+  {
+    "$searchMeta": {
+      "index": "facetIndex",
+      "facet": {
+        "operator": {
+          "compound": {
+            "must": [
+              {
+                "text": {
+                  "query": "Brown",
+                  "path": "product_infoDetail.MAIN_COLOUR"
+                }
+              },
+              {
+                "text": {
+                  "query": "JNR REPLICA KITS (Ca)",
+                  "path": "categoryDetail.CATEGORY_DESC"
+                }
+              }
+            ]
+          }
+        },
+        "facets": {
+          "brandDetail.BRAND_NAME": {
+            "type": "string",
+            "path": "brandDetail.BRAND_NAME",
+            "numBuckets": 100
+          },
+          "product_infoDetail.TITLE": {
+            "type": "string",
+            "path": "product_infoDetail.TITLE",
+            "numBuckets": 100
+          },
+          "product_infoDetail.MAIN_COLOUR": {
+            "type": "string",
+            "path": "product_infoDetail.MAIN_COLOUR",
+            "numBuckets": 100
+          },
+          "product_infoDetail.SECONDARY_COLOUR": {
+            "type": "string",
+            "path": "product_infoDetail.SECONDARY_COLOUR",
+            "numBuckets": 100
+          },
+          "product_infoDetail.FABRIC": {
+            "type": "string",
+            "path": "product_infoDetail.FABRIC",
+            "numBuckets": 100
+          },
+          "product_infoDetail.CARE": {
+            "type": "string",
+            "path": "product_infoDetail.CARE",
+            "numBuckets": 100
+          },
+          "categoryDetail.CATEGORY_DESC": {
+            "type": "string",
+            "path": "categoryDetail.CATEGORY_DESC",
+            "numBuckets": 100
+          }
+        }
+      }
+    }
+  }
+]

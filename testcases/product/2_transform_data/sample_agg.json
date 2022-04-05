@@ -1,0 +1,181 @@
+[
+    {
+      "$match": {
+        "SKU": {
+          "$in": [
+            59308
+          ]
+        }
+      }
+    },
+    {
+      "$lookup": {
+        "from": "gender",
+        "localField": "GENDER_ID",
+        "foreignField": "GENDER_ID",
+        "as": "genderDetail"
+      }
+    },
+    {
+      "$unwind": {
+        "path": "$genderDetail",
+        "preserveNullAndEmptyArrays": true
+      }
+    },
+    {
+      "$lookup": {
+        "from": "category",
+        "localField": "CATEGORY_ID",
+        "foreignField": "CATEGORY_ID",
+        "as": "categoryDetail"
+      }
+    },
+    {
+      "$unwind": {
+        "path": "$categoryDetail",
+        "preserveNullAndEmptyArrays": true
+      }
+    },
+    {
+      "$lookup": {
+        "from": "department",
+        "localField": "DEPARTMENT_ID",
+        "foreignField": "DEPARTMENT_ID",
+        "as": "departmentDetail"
+      }
+    },
+    {
+      "$unwind": {
+        "path": "$departmentDetail",
+        "preserveNullAndEmptyArrays": true
+      }
+    },
+    {
+      "$lookup": {
+        "from": "brand",
+        "localField": "BRAND_ID",
+        "foreignField": "BRAND_ID",
+        "as": "brandDetail"
+      }
+    },
+    {
+      "$unwind": {
+        "path": "$brandDetail",
+        "preserveNullAndEmptyArrays": true
+      }
+    },
+    {
+      "$lookup": {
+        "from": "colour",
+        "localField": "COLOUR",
+        "foreignField": "COLOUR_ID",
+        "as": "colourDetail"
+      }
+    },
+    {
+      "$unwind": {
+        "path": "$colourDetail",
+        "preserveNullAndEmptyArrays": true
+      }
+    },
+    {
+      "$lookup": {
+        "from": "product_info",
+        "localField": "PRODUCT_INFO_ID",
+        "foreignField": "PRODUCT_INFO_ID",
+        "as": "product_infoDetail"
+      }
+    },
+    {
+      "$unwind": {
+        "path": "$product_infoDetail",
+        "preserveNullAndEmptyArrays": true
+      }
+    },
+    {
+      "$lookup": {
+        "from": "grp",
+        "let": {
+          "group_id": "$GROUP_ID",
+          "department_id": "$DEPARTMENT_ID"
+        },
+        "pipeline": [
+          {
+            "$match": {
+              "$expr": {
+                "$and": [
+                  {
+                    "$eq": [
+                      "$GROUP_ID",
+                      "$$group_id"
+                    ]
+                  },
+                  {
+                    "$eq": [
+                      "$DEPARTMENT_ID",
+                      "$$department_id"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "as": "grpDetail"
+      }
+    },
+    {
+      "$unwind": {
+        "path": "$grpDetail",
+        "preserveNullAndEmptyArrays": true
+      }
+    },
+    {
+      "$lookup": {
+        "from": "product_facia_info",
+        "let": {
+          "product_info_id": "$PRODUCT_INFO_ID",
+          "facia_id": "JD"
+        },
+        "pipeline": [
+          {
+            "$match": {
+              "$expr": {
+                "$and": [
+                  {
+                    "$eq": [
+                      "$PRODUCT_INFO_ID",
+                      "$$product_info_id"
+                    ]
+                  },
+                  {
+                    "$eq": [
+                      "$FACIA_ID",
+                      "$$facia_id"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "as": "product_facia_infoDetail"
+      }
+    },
+    {
+      "$unwind": {
+        "path": "$product_facia_infoDetail",
+        "preserveNullAndEmptyArrays": true
+      }
+    },
+    {
+      "$merge": {
+        "into": {
+          "db": "jds_product",
+          "coll": "product"
+        },
+        "on": "_id",
+        "whenMatched": "merge"
+      }
+    }
+  ]
